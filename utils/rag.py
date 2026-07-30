@@ -16,7 +16,11 @@ client = OpenAI(
 MODEL = os.getenv("MODEL")
 
 
-def ask_pdf(vectorstore, question):
+def ask_pdf(
+    vectorstore,
+    question,
+    history=""
+):
     """
     Retrieve relevant PDF context and generate AI answer.
     """
@@ -58,9 +62,13 @@ def ask_pdf(vectorstore, question):
         prompt = f"""
 You are an AI PDF Assistant.
 
-Answer only using the provided PDF context.
+You are chatting with the user.
 
-If the answer is not available, say:
+Use the previous conversation whenever it helps answer follow-up questions.
+
+Only answer using the uploaded PDF context.
+
+If the answer is not available in the PDF, reply:
 
 "I couldn't find that information in the uploaded PDF."
 
@@ -68,8 +76,11 @@ PDF Context:
 
 {context}
 
+Conversation History:
 
-Question:
+{history}
+
+Current Question:
 
 {question}
 """
@@ -97,6 +108,9 @@ Question:
 
 
         answer = response.choices[0].message.content
+
+        if not answer:
+            return "❌ AI returned an empty response."
 
         answer += "\n\n---\n📚 **Sources**\n"
 

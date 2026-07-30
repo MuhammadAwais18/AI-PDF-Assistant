@@ -199,9 +199,17 @@ if question:
 
         with st.spinner("Thinking..."):
 
+            history = "\n".join(
+                [
+                    f"{msg['role']}: {msg['content']}"
+                    for msg in st.session_state.messages
+                ]
+            )
+
             answer = process_chat(
                 st.session_state.vectorstore,
-                question
+                question,
+                history
             )
 
         placeholder = st.empty()

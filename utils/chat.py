@@ -2,7 +2,11 @@ from utils.rag import ask_pdf
 from utils.database import save_chat
 
 
-def process_chat(vectorstore, question):
+def process_chat(
+    vectorstore,
+    question,
+    history=""
+):
     """
     Process user question through RAG
     and save conversation history.
@@ -17,12 +21,11 @@ def process_chat(vectorstore, question):
         if not question.strip():
             return "❌ Question cannot be empty."
 
-
         answer = ask_pdf(
             vectorstore,
-            question
+            question,
+            history
         )
-
 
         save_chat(
             question,
