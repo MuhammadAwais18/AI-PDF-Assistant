@@ -3,6 +3,7 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 
+from utils.retriever import retrieve_documents
 
 load_dotenv()
 
@@ -34,7 +35,8 @@ def ask_pdf(
             return "❌ Please enter a question."
 
 
-        docs = vectorstore.similarity_search(
+        docs = retrieve_documents(
+            vectorstore,
             question,
             k=4
         )
